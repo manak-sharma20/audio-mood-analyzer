@@ -1,10 +1,13 @@
-import sounddevice as sd
-import numpy as np
-import scipy.io.wavfile as wav
+from recorder import record_audio
+from features import extract_audio_features
+from mood_analysis import analyze_mood
 
-def record_audio(duration=5, sample_rate=44100):
-    print("Recording...")
-    audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype=np.float32)
-    sd.wait()  
-    wav.write("recorded_audio.wav", sample_rate, audio_data)
-    print("Recording saved as recorded_audio.wav")
+def main():
+    record_audio(duration=5)
+    pitch, tempo, energy = extract_audio_features()
+    mood = analyze_mood(pitch, tempo, energy)
+    print(f"Pitch: {pitch:.2f}, Tempo: {tempo:.2f}, Energy: {energy:.5f}")
+    print(f"Detected Mood: {mood}")
+
+if __name__ == "__main__":
+    main()
